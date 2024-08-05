@@ -29,13 +29,13 @@ def generate_email_template(ticket_num, team_name, device_name, alarm_descriptio
     subject_text = Text(email_template_window, height=2, wrap=WORD)
     subject_text.pack(padx=10, pady=5, fill=BOTH)
     subject_text.insert(END, email_subject)
-    subject_text.config(state=DISABLED)
+    subject_text.config(state=NORMAL)
 
     Label(email_template_window, text="Email Body:", font=('Helvetica 12 bold')).pack(anchor=W, padx=10, pady=5)
     body_text = Text(email_template_window, wrap=WORD)
     body_text.pack(padx=10, pady=5, fill=BOTH, expand=True)
     body_text.insert(END, email_body)
-    body_text.config(state=DISABLED)
+    body_text.config(state=NORMAL)
 
     Button(email_template_window, text="Close", command=email_template_window.destroy).pack(pady=10)
 
@@ -76,7 +76,7 @@ def generate_event_template(event_type, start_date, start_time, end_date, end_ti
         event_text = Text(event_template_window, wrap=WORD)
         event_text.pack(padx=10, pady=5, fill=BOTH, expand=True)
         event_text.insert(END, event_body)
-        event_text.config(state=DISABLED)
+        event_text.config(state=NORMAL)
 
         Button(event_template_window, text="Close", command=event_template_window.destroy).pack(pady=10)
 
@@ -152,62 +152,71 @@ def submit_submenu(selected_option, submenu_window, main_choice, input_fields):
         'Answer Script': 'Hello and thank you for calling Hughes NMC, This is <Your Name> speaking, how can I assist you today?',
         'What do I gather from calls?': 'Gather the caller\'s NAME, Where they are calling from, What is the issue?, Site SAN/Serial/Platform/State Codes.',
         'Transferring Calls': 'Transferring is as simple as entering "88" followed by the 4 digit extension of the person you are transferring to. [ex: 883317]',
-        'Single sites': "The site SAN, and the SERIAL numbers of the terminal(s) -> There may be more than one - Log into DSS (hns-username:PIN+RSA) and navigate the sidebar to 'Jupiter Dashboard' - Select 'Jupiter Dashboard', then enter the SAN or the ESN of the site into DSS to gather more information, - such as, Radio_ESN, Gateway_IDs, Beam_IDs, etc.",
-        'Terminal drops': "Check the site 'uptime', 'downtime', and 'avg packets dropped' - Ensure to look at the Ethernet stats and the last 24 hours - Review these with the customer, escalate to CNE-NMS, CNE-GW, or SDG_Support teams as needed - Have you referenced the 'Hughes Performance Metrics' sheet yet?",
-        'BGP Peering': 'Reference the BGP Peering guide for troubleshooting steps.',
-        'Move Allows': 'Follow the Move Allows process documented in the NMC procedures.',
-        'J3_Single sites': 'Check the J3 Single Site Troubleshooting documentation.',
-        'J3_Terminal drops': 'Follow the J3 Terminal Drops troubleshooting guide.',
-        'J3_BGP Peering': 'Use the J3 BGP Peering procedures for guidance.',
-        'J3_Move Allows': 'Refer to the J3 Move Allows protocol.',
-        'Enterprise': 'Log into the Enterprise Vision box via NOC_Forms, - Enter the site SAN and ensure it is correct, - Within the Enterprise Tab look for the site Serial number, - Click on the Serial Number, the IP address within the configuration tab and verify if the site is online, - Is the site offline? Ensure the site is powered on, - Verify there are no weather related events affecting the terminal, - If the terminal is online, verify packet loss and reachability.',
-        'Timing/Power': "Gather the SID and Serial numbers of the terminal that is to be decommissioned., - Log into the corresponding Vision box via NOC_Forms or via RDC to the server - Reference the 'Information to create a ticket' within the 'Hughes NOC Spreadsheet.' for the correct device, gateway, and services needed to be escalated. - Timing issues are typically to be escalated to the Network_Infrastructure team. - The NMC Daily Logs have the correct NOC Spreadsheet for the correct team to escalate to.",
-        'VSAT Outages/Down': "Check the performance metrics for any ongoing issues.",
-        'Decommission Requests': "Gather the SID and Serial numbers of the terminal that is to be decommissioned., - Log into the corresponding Vision server via NOC_FORMS (Quickest) or via RDC to the Server itself., - Navigate to the ACS Lite tab, select Manual Decommission then input the SID, Serial, Your operator name, Requester name (FSS, WWTS, etc) is fine, - Requester Department is the same as Requester name, and the Reason code for ALL Decommissions is C22 - Decommissioned: Technical Troubleshooting. - Then Execute the process, allow for the server to respond, then copy the 'Successful Decommision' information into the service ticket for closure.",
-        'Compose New': 'Restart the device and check if it resolves the issue.',
-        'IGT DHCP Pool Purge': "IGT NOC Vision DHCP Pool Purge. - Log into the NOC_'x' Vision box. - Search in the startmenu for 'Telnet <ip>'. Replace <ip> with the IP address to connect to. - Using the following: brighton:swordfish to gain access. - Within the CLI type: cd '/cfg0/' - ls -lta - rm 'dhcpsact.txt' - ls -lta -> Should no longer display the dhcp file.",
-        'IGT site not downloading': "Log into the UEMVision box and open the 'Task Manager', and navigate to the 'Services' tab. - Look for these 3 services that need to be restarted, - JservicesFGN - JservicesGENSDL - JservicesGENSDL MGR, - If the NOC_View and Satellite Router View are not loading - Restart the service -- JservicesTOPO",
-        'XCI Issues': "Typically, issues with XCI are 'seen' via the SL1 board OR via emails from Dhruval. - Create a ticket with the information provided by Dhurval or SL1. - Escalate the issue to XCI_Support engineers, and follow up until case is resolved. ",
-        'SDG': 'Call 1-(866)-245-7059',
-        'CNE-GW': 'Call (301)-601-4140',
-        'CNE-NMS': 'Call (240)-760-2132',
-        'NI': 'Call (301)-601-2624 | Secondary (301)-428-5809',
-        'ESE [ENOC]': 'Call Ext "884143 OR 884144',
-        'EDSE': 'Call Ext "884110 OR 884111',
-        'HNSec': 'Call (301)-601-4128',
-        'HNSoc': 'Call (301)-601-2666.',
-        'Jupiter 1 & 2': 'Jupiter 1&2 JOVIAN -> username:PIN+RSA | NAD DSS -> hns-username:PIN+RSA',
-        'Jupiter 3': 'Jupiter 3 DSS & JOVIAN -> Use your provisioned username and password',
-        'Ku & Terrestrial': 'For KU use the NOC_FORMS for Decommissions, and RDC into the specific servers for other issues. (ie: Timing and Power, etc.)',
-        'SA_Template': 'Contact the admin for site access approval.'
+        'Single sites': "The site SAN, and the SERIAL numbers of the terminal(s) -> There may be more than one - Log into DSS (hns-username:PIN+RSA) and navigate the sidebar to 'Jupiter Dashboard' - Select 'Jupiter Dashboard', then enter the SAN or the ESN of the site into DSS to gather more information, - such as the IP address, and site details.",
+        'Terminal drops': "The site's SAN, and ESN(s), Enter the site's SAN or ESN into DSS and navigate to the 'Jupiter Dashboard' and select 'All Terminals'.",
+        'BGP Peering': 'Contact NCCM, [Phone Number], or use the NMS dashboard to view BGP peering information.',
+        'Move Allows': 'Use the DSS tool to access the site\'s SAN and ESN(s), navigate to the Jupiter Dashboard, and access the Move Allows section.',
+        'J3_Single sites': 'Gather site SAN, SERIAL numbers, log into DSS, navigate to "J3 Dashboard", and select "Single Site" for detailed information.',
+        'J3_Terminal drops': 'Gather SAN and ESN(s), log into DSS, and navigate to "J3 Dashboard" for terminal status.',
+        'J3_BGP Peering': 'Use the NMS dashboard for J3 BGP peering info or contact NCCM.',
+        'J3_Move Allows': 'Gather SAN and ESN(s), log into DSS, navigate to "J3 Dashboard", and access the Move Allows section.',
+        'Enterprise': 'Ensure all Ku band devices are connected and operational, refer to the Enterprise manual.',
+        'Timing/Power': 'Check and adjust timing and power settings as per the Ku band documentation.',
+        'VSAT Outages/Down': 'Log into the VSAT monitoring system, check for alerts, and follow the outage handling procedures.',
+        'Decommission Requests': 'Submit decommission requests through the official portal, including all necessary details.',
+        'CAC Key Upload': 'Log into the CAC management tool and follow the upload instructions.',
+        'IGT DHCP Pool Purge': 'Access the IGT management system, navigate to DHCP settings, and perform the pool purge.',
+        'IGT site not downloading': 'Verify network connections, check IGT site configuration, and refer to the troubleshooting guide.',
+        'XCI Issues': 'Refer to the XCI manual, verify configurations, and check logs for errors.',
+        'SDG': 'Refer to the SDG escalation path document and follow the steps.',
+        'CNE-GW': 'Refer to the CNE-GW escalation path document and follow the steps.',
+        'CNE-NMS': 'Refer to the CNE-NMS escalation path document and follow the steps.',
+        'NI': 'Refer to the NI escalation path document and follow the steps.',
+        'ESE [ENOC]': 'Refer to the ESE [ENOC] escalation path document and follow the steps.',
+        'EDSE': 'Refer to the EDSE escalation path document and follow the steps.',
+        'HNSec': 'Refer to the HNSec escalation path document and follow the steps.',
+        'HNSoc': 'Refer to the HNSoc escalation path document and follow the steps.',
+        'Jupiter 1 & 2': 'Ensure you have the latest credentials for Jupiter 1 & 2 systems, and log in through the official portal.',
+        'Ku & Terrestrial': 'Use the latest credentials for Ku & Terrestrial systems, accessible via the dedicated login page.',
+        'Jupiter 3': 'Log into Jupiter 3 using the current credentials and follow the access procedures.'
     }
 
-    if main_choice == 'Email Template':
-        values = [entry.get() for entry in input_fields[main_choice]]
-        if len(values) == 4:
-            generate_email_template(*values)
-    elif main_choice == 'Event Summary':
-        values = [entry.get() for entry in input_fields[main_choice]]
-        if len(values) == 11:
-            generate_event_template(*values)
-    elif main_choice == 'Site Access Requests':
-        showinfo('Site Access Request', 'Site Access Request template has been processed.')
+    if main_choice in ['Email Template', 'Event Summary']:
+        input_values = [entry.get() for entry in input_fields[main_choice]]
+        if main_choice == 'Email Template':
+            if len(input_values) == 4:
+                generate_email_template(*input_values)
+            else:
+                showinfo('Error', 'Please provide all the required input values for the Email Template.')
+        elif main_choice == 'Event Summary':
+            if len(input_values) == 12:
+                generate_event_template(*input_values)
+            else:
+                showinfo('Error', 'Please provide all the required input values for the Event Summary.')
     else:
-        message = procedures_dict.get(selected_option, "No information available.")
-        showinfo('Procedure Info', message)
+        procedure = procedures_dict.get(selected_option, "No procedure available for this option.")
+        Label(submenu_window, text=f'Procedure:\n{procedure}', font=('Helvetica 12')).pack(pady=10)
+        
+    Button(submenu_window, text="Close", command=submenu_window.destroy).pack(pady=10)
 
-    submenu_window.destroy()
+label = Label(window, text="Please select an option:", font=('Helvetica 16 bold'))
+label.pack(pady=10)
 
-def show_main_menu():
-    Label(window, text="Welcome to the NMC Assistance Framework Application", font=('Helvetica 16 bold')).pack(pady=10)
-    Label(window, text="Created by Jamie Valentonis", font=('Helvetica 16 bold')).pack(pady=10)
-    
-    choices = ['Phone Calls', 'J1/2 Issues', 'J3/FUSION', 'Ku Issues', 'Email Template', 'IGT/XCI Issues', 'Escalation Pathes', 'Tool Login info', 'Event Summary', 'Site Access Requests']
-    
-    combo = Combobox(window, values=choices)
-    combo.set(choices[0])
-    combo.bind("<<ComboboxSelected>>", lambda event: show_submenu(combo.get()))
-    combo.pack(pady=20)
+options = ['Phone Calls', 'J1/2 Issues', 'J3/FUSION', 'Ku Issues', 'Email Template', 'IGT/XCI Issues', 'Escalation Pathes', 'Tool Login info', 'Event Summary', 'Site Access Requests']
+combo = Combobox(window, values=options)
+combo.pack(pady=10)
 
-show_main_menu()
+def on_submit():
+    selected_choice = combo.get()
+    if selected_choice:
+        show_submenu(selected_choice)
+    else:
+        showinfo('Error', 'Please select an option from the dropdown menu.')
+
+submit_button = Button(window, text="Submit", command=on_submit)
+submit_button.pack(pady=10)
+
+clear_button = Button(window, text="Clear", command=clear)
+clear_button.pack(pady=10)
+
 window.mainloop()
